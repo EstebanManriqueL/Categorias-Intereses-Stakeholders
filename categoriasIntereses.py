@@ -368,14 +368,13 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
           except:
             toWriteCategoria[0] += 0
 
-          #conteos = [men_counts, female_counts, unknown_counts]
           index_sentimiento = 0
           for gender in filter_ALL_genders:
             sentimiento = 0
             for tweet in gender["Full Text"]:
               str_twwt = str(tweet).lower()
-            if word.lower() in str_twwt:
-              sentimiento += sentiment.sentiment(str_twwt)
+              if word.lower() in str_twwt:
+                sentimiento += sentiment.sentiment(str_twwt)
             if sentimiento > 0:
               toWriteCategoria[(index_sentimiento + 3)] += sentimiento
               if sentimiento > 1:
