@@ -943,11 +943,13 @@ def ejecucionScripts(archivo_interacciones):
         globals()["aplicacion_Filtro_Stakeholders_Expandido"](archivo_interacciones, ejecucion[0], ejecucion[2], ejecucion[3], ejecucion[6], ejecucion[8], ejecucion[4], ejecucion[5])
       elif ejecucion[1] == "Excluir_Stakeholders":
         globals()["aplicacion_Filtro_Excluir_Stakeholders"](archivo_interacciones, ejecucion[0], ejecucion[2], ejecucion[3], ejecucion[7], ejecucion[8], ejecucion[4], ejecucion[5])
+      elif ejecucion[1] == "Demograficos_Condensado":
+        globals()["aplicacion_Filtro_Demograficos_Condensado"](archivo_interacciones, ejecucion[0], ejecucion[2], ejecucion[3], ejecucion[4], ejecucion[5])
 
 
 ## TO DO ##
+# Sentimiento IBM Watson
 # Modificar la funcion de agregarSentimientosCSV, la parte de las rutas
-# Agregar el condensado para Demograficos
 # Aplicar redondeo a columna de sentimientos
 # Avisar a Adán de que todo se va a pasar a clase
 # Preguntar Adán como se va a abordar lo del video (archivos de entrenamiento principalmente)
