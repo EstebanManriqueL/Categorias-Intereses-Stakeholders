@@ -348,7 +348,6 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
   for column in column_dictonary:
     progreso += 1
     toWriteCategoria = [0,0,0,0,0,0] # Numero apariciones unknown, hombres, mujeres, sentimiento y  porcentajes en ese orden 
-    palabrasEnCategoria = [0,0,0] #unknown, hombres, mujeres
     barra_progreso.update(progreso)
     for word in column:
       if type(word) != float:
@@ -357,17 +356,17 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
           female_counts = filter_ALL_genders[2]["Full Text"].str.contains(word, case=False).value_counts()
           unknown_counts = filter_ALL_genders[0]["Full Text"].str.contains(word, case=False).value_counts()
           try:
-            toWriteCategoria[0] += men_counts.iloc[1]
-          except:
-            toWriteCategoria[0] += 0
-          try:
-            toWriteCategoria[1] += female_counts.iloc[1]
+            toWriteCategoria[1] += men_counts.iloc[1]
           except:
             toWriteCategoria[1] += 0
           try:
-            toWriteCategoria[2] += unknown_counts.iloc[1]
+            toWriteCategoria[2] += female_counts.iloc[1]
           except:
             toWriteCategoria[2] += 0
+          try:
+            toWriteCategoria[0] += unknown_counts.iloc[1]
+          except:
+            toWriteCategoria[0] += 0
 
           #conteos = [men_counts, female_counts, unknown_counts]
           index_sentimiento = 0
@@ -378,20 +377,20 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
             if word.lower() in str_twwt:
               sentimiento += sentiment.sentiment(str_twwt)
             if sentimiento > 0:
-              sentimiento = sentimiento/ toWriteCategoria[index_sentimiento]
-              toWriteCategoria[(index_sentimiento + 3)] += float(sentimiento)
-              palabrasEnCategoria[index_sentimiento] += 1
+              toWriteCategoria[(index_sentimiento + 3)] += sentimiento
               if sentimiento > 1:
                 toWriteCategoria[(index_sentimiento + 3)] = 1
             index_sentimiento += 1
 
-    """for sentimiento in [0,1,2]:
-      if palabrasEnCategoria[sentimiento] > 0:
-        toWriteCategoria[(sentimiento + 3)] = toWriteCategoria[(sentimiento + 3)] / palabrasEnCategoria[sentimiento]
+          print(toWriteCategoria)
+    for sentimiento in [0,1,2]:
+      if toWriteCategoria[sentimiento] > 0:
+        toWriteCategoria[(sentimiento + 3)] = toWriteCategoria[(sentimiento + 3)] / toWriteCategoria[sentimiento]
       else:
-        toWriteCategoria[(sentimiento + 3)] = "-" """
-
+        toWriteCategoria[(sentimiento + 3)] = "-"
+    print("Se acaba columna ")
     print(toWriteCategoria)
+    del toWriteCategoria
 
 #Filtro para cada una de los participantes de una categoria de stakeholders, por cada una de las categorias de token/hashtags
 def aplicacion_Filtro_Stakeholders_Condensado(archivo_interacciones, nombre_pestana, country, profession, categoria, columna_analisis, fecha_inicio, fecha_fin):
