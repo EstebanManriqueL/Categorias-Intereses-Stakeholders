@@ -424,25 +424,25 @@ def aplicacion_Filtro_Stakeholders_Condensado(archivo_interacciones, nombre_pest
 
   numero_total_filas = 0
   for stakeholder in stakeholders_filtrados:
-   if profession == "ALL":
-    if country == "ALL": #En caso de que no se requiera un pais en particular
-      country_gender = df
-    else: #En caso de requerir un pais en particular
-      country_gender = df.loc[df[country_name] == country]
-    interacciones_stakeholder = (country_gender.loc[country_gender[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)])
-  else:
-    #Para profesion en particular
-    if country == "ALL":
-      country_gender = df
+    if profession == "ALL":
+      if country == "ALL": #En caso de que no se requiera un pais en particular
+        country_gender = df
+      else: #En caso de requerir un pais en particular
+          country_gender = df.loc[df[country_name] == country]
+      interacciones_stakeholder = (country_gender.loc[country_gender[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)])
     else:
-      country_gender = df.loc[df[country_name] == country]
-    profession_gender = country_gender.loc[country_gender[profession_name].str.contains(profession, regex=False, na=False, case=False)]
-    interacciones_stakeholder = (profession_gender.loc[profession_gender[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)])
+      #Para profesion en particular
+      if country == "ALL":
+          country_gender = df
+      else:
+        country_gender = df.loc[df[country_name] == country]
+      profession_gender = country_gender.loc[country_gender[profession_name].str.contains(profession, regex=False, na=False, case=False)]
+      interacciones_stakeholder = (profession_gender.loc[profession_gender[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)])
 
-  if fecha_inicio != "-" and fecha_fin != "-":
-    interacciones_stakeholder = (interacciones_stakeholder.loc[(interacciones_stakeholder["Date"] >= fecha_inicio) & (interacciones_stakeholder["Date"] <= fecha_fin)])
+    if fecha_inicio != "-" and fecha_fin != "-":
+      interacciones_stakeholder = (interacciones_stakeholder.loc[(interacciones_stakeholder["Date"] >= fecha_inicio) & (interacciones_stakeholder["Date"] <= fecha_fin)])
         
-    numero_total_filas += int(len(interacciones_stakeholder))
+    numero_total_filas += len(interacciones_stakeholder) #int(filtrado["Full Text"])
 
   time.sleep(time_sleep)
   pestana.update("A4", [["Total Filas", numero_total_filas]])
