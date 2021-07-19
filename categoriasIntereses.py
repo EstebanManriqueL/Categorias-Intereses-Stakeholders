@@ -347,7 +347,7 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
   index = 8
   for column in column_dictonary:
     progreso += 1
-    toWriteCategoria = [0,0,0,0,0,0,0,0,0] # Numero apariciones hombres, mujeres, unknown, porcentajes en eseorden y sentimiento
+    toWriteCategoria = [0,0,0,0,0,0,0,0,0] # Numero apariciones hombres, mujeres, unknown, sentimiento y  porcentajes en ese orden 
     palabrasEnCategoria = [0,0,0] #Hombres, mujeres, desconocidos
     barra_progreso.update(progreso)
     for word in column:
@@ -386,10 +386,11 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
               else:
                   sentimiento = "-"
               index_sentimiento += 1
-
-    toWriteCategoria[3] = toWriteCategoria[3] / palabrasEnCategoria[0]
-    toWriteCategoria[4] = toWriteCategoria[4] / palabrasEnCategoria[1]
-    toWriteCategoria[5] = toWriteCategoria[5] / palabrasEnCategoria[2]
+    for sentimiento in range(0,3,1):
+      if palabrasEnCategoria[sentimiento] > 0:
+        toWriteCategoria[sentimiento + 3] = toWriteCategoria[sentimiento + 3] / palabrasEnCategoria[sentimiento]
+      else:
+        toWriteCategoria[sentimiento + 3] = "-"
 
     print(toWriteCategoria)
 
