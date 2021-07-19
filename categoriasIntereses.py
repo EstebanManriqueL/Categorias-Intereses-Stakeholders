@@ -581,7 +581,8 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
   for stakeholder in stakeholders_filtrados:
     if fecha_inicio != "-" and fecha_fin != "-": #Filtro fechas
       filtrado = (df.loc[(df["Date"] >= fecha_inicio) & (df["Date"] <= fecha_fin)])
-    else:
+      print(len(filtrado))
+    """else:
       filtrado = df
     if profession == "ALL": #Filtro profesiones
       if country == "ALL": #Filtro Pais
@@ -597,9 +598,9 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
         filtrado = filtrado.loc[filtrado[profession_name] == profession]
       filtrado = (filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)].count())
         
-    numero_total_filas += int(filtrado["Full Text"])
+    numero_total_filas += int(filtrado["Full Text"])"""
 
-  time.sleep(time_sleep)
+  """time.sleep(time_sleep)
   pestana.update("A4", [["Total Filas", numero_total_filas]])
   time.sleep(time_sleep)
   pestana.update("D1", [["Fecha Inicio", fecha_inicio], ["Fecha Fin", fecha_fin]])
@@ -705,7 +706,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
         time.sleep(5)
   
   #except:
-    #print("No existe dicha categoria")
+    #print("No existe dicha categoria")"""
   del df
 
 #Similar a la aplicacion de filtros demograficos, con la diferencia de que se puede excluir a una categoria de stakeholders en particular
