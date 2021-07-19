@@ -334,6 +334,7 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
     numberFormat = gsf.numberFormat("NUMBER", pattern = "##.###%") 
   )
 
+  print(columns[0])
   index = 8
   for categoria in columns[0]:
     pestana.update(("A" + str(index)), [[categoria]])
@@ -387,7 +388,7 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
               index_sentimiento += 1
     for sentimiento in toWriteCategoria[3:6]:
       sentimiento = sentimiento / palabrasEnCategoria
-      
+
     print(toWriteCategoria)
 
 #Filtro para cada una de los participantes de una categoria de stakeholders, por cada una de las categorias de token/hashtags
