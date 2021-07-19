@@ -442,7 +442,7 @@ def aplicacion_Filtro_Stakeholders_Condensado(archivo_interacciones, nombre_pest
   if fecha_inicio != "-" and fecha_fin != "-":
     interacciones_stakeholder = (interacciones_stakeholder.loc[(interacciones_stakeholder["Date"] >= fecha_inicio) & (interacciones_stakeholder["Date"] <= fecha_fin)])
         
-    numero_total_filas += int(interacciones_stakeholder["Full Text"])
+    numero_total_filas += int(len(interacciones_stakeholder))
 
   time.sleep(time_sleep)
   pestana.update("A4", [["Total Filas", numero_total_filas]])
