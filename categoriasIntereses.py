@@ -332,11 +332,63 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
   #Formato de procentaje para celda de Excel
   cell_decimal_format = gsf.cellFormat(
     numberFormat = gsf.numberFormat("NUMBER", pattern = "##.###%") 
-  ) 
+  )
+
+  index = 8
+  for categoria in columns[0]:
+    pestana.update(("A" + str(index)), [[categoria]])
+    time.sleep(time_sleep)
+    index += 1 
 
   barra_progreso = progressbar.ProgressBar(max_value = len(column_dictonary))
   progreso = 0
 
+  index = 8
+  for column in column_dictonary:
+    progreso += 1
+    toWriteCategoria = [0,0,0,0,0,0,0,0,0] # Numero apariciones hombres, mujeres, unknown, porcentajes en eseorden y sentimiento
+    palabrasEnCategoria = 0
+    barra_progreso.update(progreso)
+    for word in column:
+      if type(word) != float:
+        if type(word) != float:
+          palabrasEnCategoria += 1
+          men_counts = filter_ALL_genders[1]["Full Text"].str.contains(word, case=False).value_counts()
+          female_counts = filter_ALL_genders[2]["Full Text"].str.contains(word, case=False).value_counts()
+          unknown_counts = filter_ALL_genders[0]["Full Text"].str.contains(word, case=False).value_counts()
+          try:
+            toWriteCategoria[0] += men_counts.iloc[1]
+          except:
+            toWriteCategoria[0] += 0
+          try:
+            toWriteCategoria[1] += female_counts.iloc[1]
+          except:
+            toWriteCategoria[1] += 0
+          try:
+            toWriteCategoria[2] += unknown_counts.iloc[1]
+          except:
+            toWriteCategoria[2] += 0
+
+          #conteos = [men_counts, female_counts, unknown_counts]
+          index_sentimiento = 0
+          for gender in filter_ALL_genders:
+            sentimiento = 0
+            for tweet in gender["Full Text"]:
+              str_twwt = str(tweet).lower()
+            if word.lower() in str_twwt:
+              sentimiento += sentiment.sentiment(str_twwt)
+            if toWriteCategoria[index_sentimiento] > 0:
+              sentimiento = sentimiento/ toWriteCategoria[index_sentimiento]
+              if sentimiento > 1:
+                sentimiento = 1
+              else:
+                  sentimiento = "-"
+              toWriteCategoria[index_sentimiento + 3] += sentimiento
+              index_sentimiento += 1
+    for sentimiento in toWriteCategoria[3:6]:
+      sentimiento = sentimiento / palabrasEnCategoria
+      
+    print(toWriteCategoria)
 
 #Filtro para cada una de los participantes de una categoria de stakeholders, por cada una de las categorias de token/hashtags
 def aplicacion_Filtro_Stakeholders_Condensado(archivo_interacciones, nombre_pestana, country, profession, categoria, columna_analisis, fecha_inicio, fecha_fin):
