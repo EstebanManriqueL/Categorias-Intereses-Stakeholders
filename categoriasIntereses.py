@@ -389,7 +389,7 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
     origin_cell_women = str(("C" + str(index)))
     origin_cell_unknown = str(("D" + str(index)))
     origin_cell_total = str(("K" + str(index)))
-    pestana.update(str("B"+ str(index)), [[toWriteCategoria[1], toWriteCategoria[2], toWriteCategoria[0], ('=%s/$B$3' % origin_cell_men), ('=%s/$B$4' % origin_cell_women), ('=%s/$B$5' % origin_cell_unknown), toWriteCategoria[4], toWriteCategoria[5], toWriteCategoria[3], int(toWriteCategoria[1] + toWriteCategoria[2] + toWriteCategoria[0]), ('=%s/$B$6' % origin_cell_total)]], value_input_option='USER_ENTERED')
+    pestana.update(str("B"+ str(index)), [[int(toWriteCategoria[1]), int(toWriteCategoria[2]), int(toWriteCategoria[0]), ('=%s/$B$3' % origin_cell_men), ('=%s/$B$4' % origin_cell_women), ('=%s/$B$5' % origin_cell_unknown), toWriteCategoria[4], toWriteCategoria[5], toWriteCategoria[3], int(toWriteCategoria[1] + toWriteCategoria[2] + toWriteCategoria[0]), ('=%s/$B$6' % origin_cell_total)]], value_input_option='USER_ENTERED')
     
     gsf.format_cell_range(pestana, "E:G", cell_decimal_format)
     gsf.format_cell_range(pestana, "L:M", cell_decimal_format)
