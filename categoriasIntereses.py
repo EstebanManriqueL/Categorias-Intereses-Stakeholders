@@ -465,7 +465,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
 
   for stakeholderr in stakeholders_filtrados:
     if columna_pestana_ascii > 90 and dos_columnas < 1:
-      columna_pestana_ascii = 65
+      columna_pestana_ascii = 67
       dos_columnas = 1
       columna = str(chr(segunda_columna_pestana_ascii) + chr(columna_pestana_ascii))
     elif columna_pestana_ascii > 90 and dos_columnas > 0:
@@ -536,7 +536,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
           del interacciones_stakeholder
 
           if columna_pestana_ascii > 90 and dos_columnas < 1:
-            columna_pestana_ascii = 65
+            columna_pestana_ascii = 67
             dos_columnas = 1
             columna = str(chr(segunda_columna_pestana_ascii) + chr(columna_pestana_ascii))
             columna_siguiente = str(chr(segunda_columna_pestana_ascii) + chr(columna_pestana_ascii + 1))
