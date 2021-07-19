@@ -552,7 +552,6 @@ def aplicacion_Filtro_Stakeholders_Condensado(archivo_interacciones, nombre_pest
     index += 1
   del df
 
-#Filtro para cada una de los participantes de una categoria de stakeholders, por cada una de las categorías de token/hashtags y cada una de las palabras integrantes a esta categoria
 def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pestana, country, profession, categoria, columna_analisis, fecha_inicio, fecha_fin):
   sentiment = sentiment_analysis.SentimentAnalysisSpanish()
   df = pd.read_csv(archivo_interacciones, names=columns_data, encoding='latin1', usecols=columns_data)
@@ -612,7 +611,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
 
   for stakeholderr in stakeholders_filtrados:
     if columna_pestana_ascii > 90 and dos_columnas < 1:
-      columna_pestana_ascii = 65
+      columna_pestana_ascii = 67
       dos_columnas = 1
       columna = str(chr(segunda_columna_pestana_ascii) + chr(columna_pestana_ascii))
     elif columna_pestana_ascii > 90 and dos_columnas > 0:
@@ -648,42 +647,33 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
         segunda_columna_pestana_ascii = 65
         dos_columnas = 0
         pestana.update(("A" + str(index)), [[word]])
-        time.sleep(time_sleep)
         for stakeholder in stakeholders_filtrados:
-          #Para cualquier profesion
-          if profession == "ALL":
-            country_gender = df.loc[df[country_name] == country]
-            interacciones_stakeholder = (country_gender.loc[country_gender[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)])
+          if fecha_inicio != "-" and fecha_fin != "-": #Filtro fechas
+            filtrado = (df.loc[(df["Date"] >= fecha_inicio) & (df["Date"] <= fecha_fin)])
           else:
-            #Para profesion en particular
-            country_gender = df.loc[df[country_name] == country]
-            profession_gender = country_gender.loc[country_gender[profession_name].str.contains(profession, regex=False, na=False, case=False)]
-            interacciones_stakeholder = (profession_gender.loc[profession_gender[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)])  
+            filtrado = df
+          if profession == "ALL": #Filtro profesiones
+            if country == "ALL": #Filtro Pais
+              continue
+            else:
+              filtrado = filtrado.loc[filtrado[country_name] == country]
+            filtrado_textos = filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False) & filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False)]
+            filtrado = (len(filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False) & filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False)]))
+          else:
+            if country == "ALL":
+                continue
+            else:
+              filtrado = filtrado.loc[filtrado[country_name] == country]
+              filtrado = filtrado.loc[filtrado[profession_name] == profession]
+            filtrado_textos = filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False) & filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False)]
+            filtrado = (len(filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False) & filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False)]))
 
-          if fecha_inicio != "-" and fecha_fin != "-":
-            interacciones_stakeholder = (interacciones_stakeholder.loc[(interacciones_stakeholder["Date"] >= fecha_inicio) & (interacciones_stakeholder["Date"] <= fecha_fin)])
-            
-          contador = interacciones_stakeholder["Full Text"].str.contains(word, case=False).value_counts()
-          try:
-            contador = contador.iloc[1]
-          except:
-            contador = 0
-
-          """
-          hombres = contador_incluidos.loc[df[gender_name] == male]
-          hombres = hombres[hombres["Full Text"].str.contains(word, case=False)]
-          """
-
-          tweets = interacciones_stakeholder[interacciones_stakeholder["Full Text"].str.contains(word, case=False)]
-          acumulado_sentimiento = 0
-          for tweet in tweets["Full Text"]:
-            #print(tweet)
-            acumulado_sentimiento += sentiment.sentiment(str(tweet))
-          del tweets
-          del interacciones_stakeholder
+          sentimiento = 0
+          for tweet in filtrado_textos["Full Text"]:
+            sentimiento += sentiment.sentiment(str(tweet))
 
           if columna_pestana_ascii > 90 and dos_columnas < 1:
-            columna_pestana_ascii = 65
+            columna_pestana_ascii = 67
             dos_columnas = 1
             columna = str(chr(segunda_columna_pestana_ascii) + chr(columna_pestana_ascii))
             columna_siguiente = str(chr(segunda_columna_pestana_ascii) + chr(columna_pestana_ascii + 1))
@@ -701,20 +691,18 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
 
           if columna_siguiente is not "[":
             gsf.format_cell_range(pestana, columna_siguiente, cell_decimal_format)
-            time.sleep(time_sleep)
 
           porcentaje = "="+ (columna) + str(index) + "/$B$4"
-          if contador > 0:
-            valor_sentimiento = acumulado_sentimiento / float(contador)
-            if valor_sentimiento > 1:
-              valor_sentimiento = 1
+          if filtrado > 0:
+            sentimiento = sentimiento / float(filtrado)
+            if sentimiento > 1:
+              sentimiento = 1
           else:
-            valor_sentimiento = "-"
-          pestana.update((columna + str(index)), [[int(contador), (porcentaje), valor_sentimiento]], value_input_option='USER_ENTERED')
-          time.sleep(time_sleep)
-        
+            sentimiento = "-"
+          pestana.update((columna + str(index)), [[filtrado, (porcentaje), sentimiento]], value_input_option='USER_ENTERED')
           columna_pestana_ascii += 3
         index += 1
+        time.sleep(5)
   
   #except:
     #print("No existe dicha categoria")
