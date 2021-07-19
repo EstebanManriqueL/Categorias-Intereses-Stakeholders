@@ -951,6 +951,9 @@ def ejecucionScripts(archivo_interacciones):
 # Sentimiento IBM Watson
 # Modificar la funcion de agregarSentimientosCSV, la parte de las rutas
 # Aplicar redondeo a columna de sentimientos
-# Avisar a Adán de que todo se va a pasar a clase
 # Preguntar Adán como se va a abordar lo del video (archivos de entrenamiento principalmente)
 # Creacion de nueva funcion Expandido
+# Fuente de datos (twitter, news, etc.)
+# Quitar impresiones
+# Pensar intereses cruzados
+# Ver como evitar error 500
