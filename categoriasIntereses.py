@@ -378,17 +378,24 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
             if sentimiento > 0:
               toWriteCategoria[(index_sentimiento + 3)] += sentimiento
             index_sentimiento += 1
-
-          print(toWriteCategoria)
     
     for sentimiento in [0,1,2]:
       if toWriteCategoria[sentimiento] > 0:
         toWriteCategoria[(sentimiento + 3)] = toWriteCategoria[(sentimiento + 3)] / toWriteCategoria[sentimiento]
       else:
         toWriteCategoria[(sentimiento + 3)] = "-"
-    print("Se acaba columna ")
-    print(toWriteCategoria)
-    del toWriteCategoria
+
+    origin_cell_men = str(("B" + str(index)))
+    origin_cell_women = str(("C" + str(index)))
+    origin_cell_unknown = str(("D" + str(index)))
+    origin_cell_total = str(("K" + str(index)))
+    pestana.update(str("B"+ str(index)), [[toWriteCategoria[1], toWriteCategoria[2], toWriteCategoria[0], ('=%s/$B$3' % origin_cell_men), ('=%s/$B$4' % origin_cell_women), ('=%s/$B$5' % origin_cell_unknown), toWriteCategoria[4], toWriteCategoria[5], toWriteCategoria[3], int(toWriteCategoria[1] + toWriteCategoria[2] + toWriteCategoria[0]), ('=%s/$B$6' % origin_cell_total)]], value_input_option='USER_ENTERED')
+    
+    gsf.format_cell_range(pestana, "E:G", cell_decimal_format)
+    gsf.format_cell_range(pestana, "L:M", cell_decimal_format)
+    time.sleep(time_sleep)
+    
+    index += 1
 
 #Filtro para cada una de los participantes de una categoria de stakeholders, por cada una de las categorias de token/hashtags
 def aplicacion_Filtro_Stakeholders_Condensado(archivo_interacciones, nombre_pestana, country, profession, categoria, columna_analisis, fecha_inicio, fecha_fin):
