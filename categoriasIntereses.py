@@ -379,18 +379,18 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
               sentimiento += sentiment.sentiment(str_twwt)
             if sentimiento > 0:
               sentimiento = sentimiento/ toWriteCategoria[index_sentimiento]
-              toWriteCategoria[index_sentimiento + 3] += sentimiento
+              toWriteCategoria[(index_sentimiento + 3)] += sentimiento
               palabrasEnCategoria[index_sentimiento] += 1
               if sentimiento > 1:
-                toWriteCategoria[index_sentimiento + 3] = 1
+                toWriteCategoria[(index_sentimiento + 3)] = 1
             else:
-                toWriteCategoria[index_sentimiento + 3] = "-"
+                toWriteCategoria[(index_sentimiento + 3)] = "-"
             index_sentimiento += 1
     for sentimiento in range(0,3,1):
       if palabrasEnCategoria[sentimiento] > 0:
-        toWriteCategoria[sentimiento + 3] = toWriteCategoria[sentimiento + 3] / palabrasEnCategoria[sentimiento]
+        toWriteCategoria[(sentimiento + 3)] = toWriteCategoria[(sentimiento + 3)] / palabrasEnCategoria[sentimiento]
       else:
-        toWriteCategoria[sentimiento + 3] = "-"
+        toWriteCategoria[(sentimiento + 3)] = "-"
 
     print(toWriteCategoria)
 
