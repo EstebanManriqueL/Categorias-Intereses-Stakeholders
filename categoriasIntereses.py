@@ -582,7 +582,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
     if fecha_inicio != "-" and fecha_fin != "-": #Filtro fechas
       filtrado = (df.loc[(df["Date"] >= fecha_inicio) & (df["Date"] <= fecha_fin)])
       print(len(filtrado))
-    """else:
+    else:
       filtrado = df
     if profession == "ALL": #Filtro profesiones
       if country == "ALL": #Filtro Pais
@@ -590,6 +590,8 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
       else:
         filtrado = filtrado.loc[filtrado[country_name] == country]
       filtrado = (filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)].count())
+      print(filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)])
+      print(len(filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)]))
     else:
       if country == "ALL":
           continue
@@ -598,7 +600,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
         filtrado = filtrado.loc[filtrado[profession_name] == profession]
       filtrado = (filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)].count())
         
-    numero_total_filas += int(filtrado["Full Text"])"""
+    numero_total_filas += int(filtrado["Full Text"])
 
   """time.sleep(time_sleep)
   pestana.update("A4", [["Total Filas", numero_total_filas]])
