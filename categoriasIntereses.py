@@ -88,6 +88,7 @@ def definicion_Columnas_Filtro(path_archivo):
     columns_data = columns_data[0][0:no_vacios]
     print(columns_data)
 
+#Lectura de grupos de stakeholders, incluido grupos a aplicar en Filtro de Exclusion
 def lectura_Stakeholders(path_archivo):
   with open(path_archivo, "r") as csv_file:
     csv_reader = csv.reader(csv_file, delimiter = ",")
@@ -123,6 +124,7 @@ def lectura_Stakeholders(path_archivo):
       counter+= 1
       print("")
 
+#Filtro por token/hashtag y por género, con sentimiento
 def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, profession, fecha_inicio, fecha_fin):
   sentiment = sentiment_analysis.SentimentAnalysisSpanish()
   df = pd.read_csv(nombre_archivo, names=columns_data, encoding='latin1', usecols=columns_data)
@@ -267,6 +269,76 @@ def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, pro
         origin_cell_total = "K" + str(cell_number)
   del df
 
+#Filtro por categoria de Intereses, clasificado por genero y con sentimiento incluido
+def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, country, profession, fecha_inicio, fecha_fin):
+  sentiment = sentiment_analysis.SentimentAnalysisSpanish()
+  df = pd.read_csv(nombre_archivo, names=columns_data, encoding='latin1', usecols=columns_data)
+  country_name = "Country Code" #Columna de codigos de paises para filtro
+  gender_name = "Gender" #Columna de codigos de genero para filtro
+  profession_name = "Professions" #Columna de profesiones para filtro
+
+  gender = "unknown"
+  male = "male"
+  female = "female"
+
+  añadir_Pestaña(nombre_pestana)
+  pestana = documento.worksheet(nombre_pestana) #Nombre de pestana en donde se va a escribir info
+  time_sleep = 0.25
+
+  pestana.update("A1", [["Pais", country], ["Profesion", profession]])
+  time.sleep(time_sleep)
+
+  if fecha_inicio != "-" and fecha_fin != "-":
+      df = (df.loc[(df["Date"] >= fecha_inicio) & (df["Date"] <= fecha_fin)])
+  
+  if profession == "ALL":
+    if country == "ALL":
+      country_gender = df
+    else:
+      country_gender = df.loc[df[country_name] == country]
+    filter_gender = country_gender.loc[df[gender_name] == gender]
+    print(len(filter_gender))
+    filter_ALL_genders = [country_gender.loc[df[gender_name] == gender], country_gender.loc[df[gender_name] == male], country_gender.loc[df[gender_name] == female]]
+    total_rows = filter_ALL_genders[1].count() + filter_ALL_genders[2].count() + filter_ALL_genders[0].count()
+    men_rows = filter_ALL_genders[1].count()
+    women_rows = filter_ALL_genders[2].count()
+    unknown_rows = filter_ALL_genders[0].count()
+  else:
+    #Para profesion en particular
+    if country == "ALL":
+      country_gender = df
+    else:
+      country_gender = df.loc[df[country_name] == country]
+    profession_gender = country_gender.loc[country_gender[profession_name].str.contains(profession, regex=False, na=False, case=False)]
+    filter_gender = profession_gender.loc[df[gender_name] == gender]
+    filter_ALL_genders = [profession_gender.loc[df[gender_name] == gender], profession_gender.loc[df[gender_name] == male], profession_gender.loc[df[gender_name] == female]]
+    total_rows = profession_gender.loc[df[gender_name] == female].count() + profession_gender.loc[df[gender_name] == male].count()  + profession_gender.loc[df[gender_name] == gender].count()
+    men_rows = profession_gender.loc[df[gender_name] == male].count()
+    women_rows = profession_gender.loc[df[gender_name] == female].count()
+    #TODO agregar unknown
+
+  pestana.update("A3", [["Hombres", int(men_rows["Full Text"])], ["Mujeres", int(women_rows["Full Text"])], ["No especificado", int(unknown_rows["Full Text"])], ["Total Filas", int(total_rows["Full Text"])]])
+  time.sleep(time_sleep)
+  pestana.update("B7", [["Hombres", "Mujeres", "No especificado", "% Hombres", "% Mujeres", "% No especificado", "Sentimiento Hombres", "Sentimiento Mujeres", "Sentimiento No especificados", "Total", "%Total"]])
+  time.sleep(time_sleep)
+  pestana.update("D1", [["Fecha Inicio", fecha_inicio], ["Fecha Fin", fecha_fin]])
+
+  origin_cell = "A8"
+  cell_number = 8
+  origin_cell_men = "B9"
+  origin_cell_women = "C9"
+  origin_cell_unknown = "D9"
+
+  #Formato de procentaje para celda de Excel
+  cell_decimal_format = gsf.cellFormat(
+    numberFormat = gsf.numberFormat("NUMBER", pattern = "##.###%") 
+  ) 
+
+  barra_progreso = progressbar.ProgressBar(max_value = len(column_dictonary))
+  progreso = 0
+
+
+#Filtro para cada una de los participantes de una categoria de stakeholders, por cada una de las categorias de token/hashtags
 def aplicacion_Filtro_Stakeholders_Condensado(archivo_interacciones, nombre_pestana, country, profession, categoria, columna_analisis, fecha_inicio, fecha_fin):
   sentiment = sentiment_analysis.SentimentAnalysisSpanish()
   df = pd.read_csv(archivo_interacciones, names=columns_data, encoding='latin1', usecols=columns_data)
@@ -421,6 +493,7 @@ def aplicacion_Filtro_Stakeholders_Condensado(archivo_interacciones, nombre_pest
     index += 1
   del df
 
+#Filtro para cada una de los participantes de una categoria de stakeholders, por cada una de las categorías de token/hashtags y cada una de las palabras integrantes a esta categoria
 def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pestana, country, profession, categoria, columna_analisis, fecha_inicio, fecha_fin):
   sentiment = sentiment_analysis.SentimentAnalysisSpanish()
   df = pd.read_csv(archivo_interacciones, names=columns_data, encoding='latin1', usecols=columns_data)
@@ -577,6 +650,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
     #print("No existe dicha categoria")
   del df
 
+#Similar a la aplicacion de filtros demograficos, con la diferencia de que se puede excluir a una categoria de stakeholders en particular
 def aplicacion_Filtro_Excluir_Stakeholders(archivo_interacciones, nombre_pestana, country, profession, categoria, columna_analisis, fecha_inicio, fecha_fin):
   gc.enable()
   sentiment = sentiment_analysis.SentimentAnalysisSpanish()
@@ -764,6 +838,7 @@ def aplicacion_Filtro_Excluir_Stakeholders(archivo_interacciones, nombre_pestana
 
   del df
 
+#Se agrega el sentimiento, numerico y en palabras en csv de interacciones
 def agregarSentimientoCSV(archivo_interacciones):
   sentiment = sentiment_analysis.SentimentAnalysisSpanish()
   df = pd.read_csv(archivo_interacciones, names=columns_data, encoding='latin1', usecols=columns_data)
@@ -792,6 +867,7 @@ def agregarSentimientoCSV(archivo_interacciones):
   with open("/content/drive/Shared drives/(50 PROJ-CORP) DATA ANALYTICS/Proyectos/Clientes/Grupo Los Pueblos/py_cgp_criptomonedas_Sentimientos.csv", 'w', encoding='latin1') as f:
     df.to_csv(f, index=False, header=False)
 
+#Ejecutar, de acuerdo a la pestana de configuracion del Sheets de Drive, las diferentes funciones
 def ejecucionScripts(archivo_interacciones):
   pestana = documento.worksheet("Parametros_Ejecucion")
   informarcion = pestana.get_all_values()
@@ -809,3 +885,11 @@ def ejecucionScripts(archivo_interacciones):
       elif ejecucion[1] == "Excluir_Stakeholders":
         globals()["aplicacion_Filtro_Excluir_Stakeholders"](archivo_interacciones, ejecucion[0], ejecucion[2], ejecucion[3], ejecucion[7], ejecucion[8], ejecucion[4], ejecucion[5])
 
+
+## TO DO ##
+# Modificar la funcion de agregarSentimientosCSV, la parte de las rutas
+# Agregar el condensado para Demograficos
+# Aplicar redondeo a columna de sentimientos
+# Avisar a Adán de que todo se va a pasar a clase
+# Preguntar Adán como se va a abordar lo del video (archivos de entrenamiento principalmente)
+# Creacion de nueva funcion Expandido
