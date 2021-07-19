@@ -377,11 +377,10 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
                 sentimiento += sentiment.sentiment(str_twwt)
             if sentimiento > 0:
               toWriteCategoria[(index_sentimiento + 3)] += sentimiento
-              if sentimiento > 1:
-                toWriteCategoria[(index_sentimiento + 3)] = 1
             index_sentimiento += 1
 
           print(toWriteCategoria)
+    
     for sentimiento in [0,1,2]:
       if toWriteCategoria[sentimiento] > 0:
         toWriteCategoria[(sentimiento + 3)] = toWriteCategoria[(sentimiento + 3)] / toWriteCategoria[sentimiento]
