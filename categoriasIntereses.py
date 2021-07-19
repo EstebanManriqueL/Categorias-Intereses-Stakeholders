@@ -348,12 +348,11 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
   for column in column_dictonary:
     progreso += 1
     toWriteCategoria = [0,0,0,0,0,0,0,0,0] # Numero apariciones hombres, mujeres, unknown, porcentajes en eseorden y sentimiento
-    palabrasEnCategoria = 0
+    palabrasEnCategoria = [0,0,0] #Hombres, mujeres, desconocidos
     barra_progreso.update(progreso)
     for word in column:
       if type(word) != float:
         if type(word) != float:
-          palabrasEnCategoria += 1
           men_counts = filter_ALL_genders[1]["Full Text"].str.contains(word, case=False).value_counts()
           female_counts = filter_ALL_genders[2]["Full Text"].str.contains(word, case=False).value_counts()
           unknown_counts = filter_ALL_genders[0]["Full Text"].str.contains(word, case=False).value_counts()
@@ -382,12 +381,15 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
               sentimiento = sentimiento/ toWriteCategoria[index_sentimiento]
               if sentimiento > 1:
                 sentimiento = 1
+                toWriteCategoria[index_sentimiento + 3] += sentimiento
+                palabrasEnCategoria[index_sentimiento] += 1
               else:
                   sentimiento = "-"
-              toWriteCategoria[index_sentimiento + 3] += sentimiento
               index_sentimiento += 1
-    for sentimiento in toWriteCategoria[3:6]:
-      sentimiento = sentimiento / palabrasEnCategoria
+
+    toWriteCategoria[3] = toWriteCategoria[3] / palabrasEnCategoria[0]
+    toWriteCategoria[4] = toWriteCategoria[4] / palabrasEnCategoria[1]
+    toWriteCategoria[5] = toWriteCategoria[5] / palabrasEnCategoria[2]
 
     print(toWriteCategoria)
 
