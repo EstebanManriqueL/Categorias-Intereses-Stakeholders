@@ -45,7 +45,6 @@ def definicion_Categorias(path_archivo):
     for row in csv_reader:
       columns.append(row)
     columns_number = len(columns[0])
-    print(columns[0])
   
   global column_dictonary
   column_dictonary = []
@@ -67,7 +66,6 @@ def definicion_Categorias(path_archivo):
         print(column_dictonary[counter][category_counter])
       category_counter+= 1
     counter+= 1
-    print("")
 
 #Definicion de columnas para aplicar filtros
 def definicion_Columnas_Filtro(path_archivo):
@@ -86,7 +84,6 @@ def definicion_Columnas_Filtro(path_archivo):
       if len(cabezera) > 0:
         no_vacios += 1
     columns_data = columns_data[0][0:no_vacios]
-    print(columns_data)
 
 #Lectura de grupos de stakeholders, incluido grupos a aplicar en Filtro de Exclusion
 def lectura_Stakeholders(path_archivo):
@@ -100,7 +97,6 @@ def lectura_Stakeholders(path_archivo):
     
     stakeholders[0][0] = stakeholders[0][0][1:]
     stakeholders_number = len(stakeholders[0])
-    print(stakeholders[0])
 
     global stakeholders_dictonary
     stakeholders_dictonary = []
@@ -122,7 +118,6 @@ def lectura_Stakeholders(path_archivo):
           print(stakeholders_dictonary[counter][stakeholder_counter])
         stakeholder_counter+= 1
       counter+= 1
-      print("")
 
 #Filtro por token/hashtag y por género, con sentimiento
 def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, profession, fecha_inicio, fecha_fin):
@@ -334,7 +329,6 @@ def aplicacion_Filtro_Demograficos_Condensado(nombre_archivo, nombre_pestana, co
     numberFormat = gsf.numberFormat("NUMBER", pattern = "##.###%") 
   )
 
-  print(columns[0])
   index = 8
   for categoria in columns[0]:
     pestana.update(("A" + str(index)), [[categoria]])
@@ -414,7 +408,6 @@ def aplicacion_Filtro_Stakeholders_Condensado(archivo_interacciones, nombre_pest
       else:
         stakeholders_filtrados.append(stakeholder)
 
-  print(stakeholders_filtrados)
   añadir_Pestaña(nombre_pestana)
   pestana = documento.worksheet(nombre_pestana) #Nombre de pestana en donde se va a escribir info
   time_sleep = 0.25
@@ -569,7 +562,6 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
         stakeholders_filtrados.append(("@" + stakeholder.lower()))
       else:
         stakeholders_filtrados.append(stakeholder)
-  print(stakeholders_filtrados)
   
   añadir_Pestaña(nombre_pestana)
   pestana = documento.worksheet(nombre_pestana) #Nombre de pestana en donde se va a escribir info
@@ -654,12 +646,12 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
             if country == "ALL": #Filtro Pais
               filtrado = df
             else:
-              filtrado = filtrado.loc[filtrado[country_name] == country]
+              filtrado = df.loc[df[country_name] == country]
           else:
             if country == "ALL":
               filtrado = df
             else:
-              filtrado = filtrado.loc[filtrado[country_name] == country]
+              filtrado = df.loc[df[country_name] == country]
             filtrado = filtrado.loc[filtrado[profession_name].str.contains(profession, regex=False, na=False, case=False)]
           
           filtrado = (filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)])
@@ -922,7 +914,6 @@ def agregarSentimientoCSV(archivo_interacciones):
       sentimiento_NPS.append(sentimiento_escrito)
   df["Sentimiento Numerico"] = sentimiento_numerico
   df["Sentimiento Escrito"] = sentimiento_NPS
-  print(df)
 
   with open("/content/drive/Shared drives/(50 PROJ-CORP) DATA ANALYTICS/Proyectos/Clientes/Grupo Los Pueblos/py_cgp_criptomonedas_Sentimientos.csv", 'w', encoding='latin1') as f:
     df.to_csv(f, index=False, header=False)
@@ -949,12 +940,11 @@ def ejecucionScripts(archivo_interacciones):
 
 
 ## TO DO ##
-# Sentimiento IBM Watson
-# Modificar la funcion de agregarSentimientosCSV, la parte de las rutas
-# Aplicar redondeo a columna de sentimientos
-# Preguntar Adán como se va a abordar lo del video (archivos de entrenamiento principalmente)
-# Creacion de nueva funcion Expandido
-# Fuente de datos (twitter, news, etc.)
-# Quitar impresiones
-# Pensar intereses cruzados
-# Ver como evitar error 500
+# Sentimiento IBM Watson (3)
+# Modificar la funcion de agregarSentimientosCSV, la parte de las rutas (1)
+# Aplicar redondeo a columna de sentimientos (1)
+# Bayes (2)
+# Fuente de datos (twitter, news, etc.) (3)
+# Quitar impresiones (1)
+# Pensar intereses cruzados (4)
+# Ver como evitar error 500 (5)
