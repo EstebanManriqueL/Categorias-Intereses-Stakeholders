@@ -641,6 +641,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
     barra_progreso.update(progreso)
     for word in column:
       if type(word) != float:
+        time.sleep(2)
         if word in columns[0]:
           index += 1
         columna_pestana_ascii = 66
@@ -704,10 +705,9 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
               sentimiento = 1
           else:
             sentimiento = "-"
-          pestana.update((columna + str(index)), [[filtrado, (porcentaje), sentimiento]], value_input_option='USER_ENTERED')
+          pestana.update((columna + str(index)), [[int(filtrado), float(porcentaje), float(sentimiento)]], value_input_option='USER_ENTERED')
           columna_pestana_ascii += 3
         index += 1
-    time.sleep(2)
   del df
 
 #Similar a la aplicacion de filtros demograficos, con la diferencia de que se puede excluir a una categoria de stakeholders en particular
