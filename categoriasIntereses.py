@@ -705,7 +705,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
               sentimiento = 1
           else:
             sentimiento = "-"
-          pestana.update((columna + str(index)), [[int(filtrado), float(porcentaje), float(sentimiento)]], value_input_option='USER_ENTERED')
+          pestana.update((columna + str(index)), [[int(filtrado), porcentaje, float(sentimiento)]], value_input_option='USER_ENTERED')
           columna_pestana_ascii += 3
         index += 1
   del df
