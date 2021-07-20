@@ -654,7 +654,12 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
             filtrado = (df.loc[(df["Date"] >= fecha_inicio) & (df["Date"] <= fecha_fin)])
           else:
             filtrado = df
-          if profession == "ALL": #Filtro profesiones
+
+          print(len(filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)]))
+          print(len(filtrado.loc[filtrado["Full Text"].str.contains(str(word), regex=False, na=False, case=False)]))
+          print(len(filtrado.loc[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False))]))
+
+          """if profession == "ALL": #Filtro profesiones
             if country == "ALL": #Filtro Pais
               continue
             else:
@@ -703,7 +708,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
           else:
             sentimiento = "-"
           pestana.update((columna + str(index)), [[filtrado, (porcentaje), sentimiento]], value_input_option='USER_ENTERED')
-          columna_pestana_ascii += 3
+          columna_pestana_ascii += 3"""
         index += 1
         time.sleep(2)
   del df
