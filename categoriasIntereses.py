@@ -630,13 +630,14 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
 
   index = 8
   for column in column_dictonary:
-    time.sleep(2)
+    time.sleep(10)
     progreso += 1
     barra_progreso.update(progreso)
     for word in column:
       if type(word) != float:
         if word in columns[0]:
           index += 1
+        time.sleep(5)
         columna_pestana_ascii = 66
         segunda_columna_pestana_ascii = 65
         dos_columnas = 0
