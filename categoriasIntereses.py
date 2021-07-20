@@ -661,13 +661,14 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
             filtrado = (len(filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False) & filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False)]))
           else:
             if country == "ALL":
-                continue
+              continue
             else:
               filtrado = filtrado.loc[filtrado[country_name] == country]
               filtrado = filtrado.loc[filtrado[profession_name] == profession]
             filtrado_textos = filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False) & filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False)]
             filtrado = (len(filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False) & filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False)]))
-
+          
+          print(filtrado_textos)
           sentimiento = 0
           for tweet in filtrado_textos["Full Text"]:
             sentimiento += sentiment.sentiment(str(tweet))
@@ -703,9 +704,6 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
           columna_pestana_ascii += 3
         index += 1
         time.sleep(2)
-  
-  #except:
-    #print("No existe dicha categoria")
   del df
 
 #Similar a la aplicacion de filtros demograficos, con la diferencia de que se puede excluir a una categoria de stakeholders en particular
