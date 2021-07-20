@@ -655,21 +655,25 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
           else:
             filtrado = df
 
+          #print(len(filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)]))
+          #print(len(filtrado.loc[filtrado["Full Text"].str.contains(str(word), regex=False, na=False, case=False)]))
+          #print(len(filtrado[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False)]))
+
           if profession == "ALL": #Filtro profesiones
             if country == "ALL": #Filtro Pais
               continue
             else:
               filtrado = filtrado.loc[filtrado[country_name] == country]
-            filtrado_textos = filtrado[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False) & filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False)]
-            filtrado = (len(filtrado[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False) & filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False)]))
+            filtrado_textos = filtrado[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False))]
+            filtrado = (len(filtrado[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False))]))
           else:
             if country == "ALL":
               continue
             else:
               filtrado = filtrado.loc[filtrado[country_name] == country]
               filtrado = filtrado.loc[filtrado[profession_name] == profession]
-            filtrado_textos = filtrado[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False) & filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False)]
-            filtrado = (len(filtrado[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False) & filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False)]))
+            filtrado_textos = filtrado[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False))]
+            filtrado = (len(filtrado[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False))]))
           
           print(filtrado_textos)
           sentimiento = 0
