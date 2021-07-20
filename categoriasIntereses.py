@@ -649,39 +649,30 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
         pestana.update(("A" + str(index)), [[word]])
         print(stakeholders_filtrados)
         for stakeholder in stakeholders_filtrados:
-          print(stakeholder)
-          if fecha_inicio != "-" and fecha_fin != "-": #Filtro fechas
-            filtrado = (df.loc[(df["Date"] >= fecha_inicio) & (df["Date"] <= fecha_fin)])
-          else:
-            filtrado = df
-
-          #print(len(filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)]))
-          #print(len(filtrado.loc[filtrado["Full Text"].str.contains(str(word), regex=False, na=False, case=False)]))
-          #print(len(filtrado[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False)]))
-
           if profession == "ALL": #Filtro profesiones
             if country == "ALL": #Filtro Pais
-              continue
+              filtrado = df
             else:
               filtrado = filtrado.loc[filtrado[country_name] == country]
           else:
             if country == "ALL":
-              continue
+              filtrado = df
             else:
               filtrado = filtrado.loc[filtrado[country_name] == country]
-              filtrado = filtrado.loc[filtrado[profession_name] == profession]
-          
-          filtrado = filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)]
-          print(len(filtrado))
-          filtrado = filtrado.loc[filtrado["Full Text"].str.contains(str(word), regex=False, na=False, case=False)]
-          print(len(filtrado))
-          print(filtrado["Full Text"])
-          #filtrado_textos = filtrado[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False))] 
-          #filtrado = len(filtrado[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False))])
-          
-          #print(filtrado_textos)
-          #print(filtrado)
-          """sentimiento = 0
+            filtrado = filtrado.loc[filtrado[profession_name].str.contains(profession, regex=False, na=False, case=False)]
+            filtrado = (filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)])
+
+          if fecha_inicio != "-" and fecha_fin != "-": #Filtro fechas
+            filtrado = (filtrado.loc[(filtrado["Date"] >= fecha_inicio) & (filtrado["Date"] <= fecha_fin)])
+
+          filtrado_textos = filtrado
+          filtrado = filtrado_textos["Full Text"].str.contains(word, case=False).value_counts()
+          try:
+            filtrado = filtrado.iloc[1]
+          except:
+            filtrado = 0
+
+          sentimiento = 0
           for tweet in filtrado_textos["Full Text"]:
             sentimiento += sentiment.sentiment(str(tweet))
 
@@ -715,7 +706,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
           pestana.update((columna + str(index)), [[filtrado, (porcentaje), sentimiento]], value_input_option='USER_ENTERED')
           columna_pestana_ascii += 3
         index += 1
-        time.sleep(2)"""
+        time.sleep(2)
   del df
 
 #Similar a la aplicacion de filtros demograficos, con la diferencia de que se puede excluir a una categoria de stakeholders en particular
