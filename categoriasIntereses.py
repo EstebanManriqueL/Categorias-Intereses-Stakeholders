@@ -657,7 +657,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
 
           print(len(filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)]))
           print(len(filtrado.loc[filtrado["Full Text"].str.contains(str(word), regex=False, na=False, case=False)]))
-          print(len(filtrado.loc[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False))]))
+          print(len(filtrado[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False))]))
 
           """if profession == "ALL": #Filtro profesiones
             if country == "ALL": #Filtro Pais
