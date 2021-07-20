@@ -660,7 +660,8 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
             else:
               filtrado = filtrado.loc[filtrado[country_name] == country]
             filtrado = filtrado.loc[filtrado[profession_name].str.contains(profession, regex=False, na=False, case=False)]
-            filtrado = (filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)])
+          
+          filtrado = (filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)])
 
           if fecha_inicio != "-" and fecha_fin != "-": #Filtro fechas
             filtrado = (filtrado.loc[(filtrado["Date"] >= fecha_inicio) & (filtrado["Date"] <= fecha_fin)])
