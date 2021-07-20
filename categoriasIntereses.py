@@ -671,11 +671,16 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
               filtrado = filtrado.loc[filtrado[country_name] == country]
               filtrado = filtrado.loc[filtrado[profession_name] == profession]
           
-          filtrado_textos = filtrado[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False))] 
-          filtrado = len(filtrado[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False))])
+          filtrado = filtrado.loc[filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)]
+          print(len(filtrado))
+          filtrado = filtrado.loc[filtrado["Full Text"].str.contains(str(word), regex=False, na=False, case=False)]
+          print(len(filtrado))
+          print(filtrado["Full Text"])
+          #filtrado_textos = filtrado[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False))] 
+          #filtrado = len(filtrado[(filtrado[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)) & (filtrado["Full Text"].str.contains(word, regex=False, na=False, case=False))])
           
-          print(filtrado_textos)
-          print(filtrado)
+          #print(filtrado_textos)
+          #print(filtrado)
           """sentimiento = 0
           for tweet in filtrado_textos["Full Text"]:
             sentimiento += sentiment.sentiment(str(tweet))
