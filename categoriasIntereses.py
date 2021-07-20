@@ -598,7 +598,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
       interacciones_stakeholder = (interacciones_stakeholder.loc[(interacciones_stakeholder["Date"] >= fecha_inicio) & (interacciones_stakeholder["Date"] <= fecha_fin)])
         
     numero_total_filas += len(interacciones_stakeholder) #int(filtrado["Full Text"])
-        
+
   time.sleep(time_sleep)
   pestana.update("A4", [["Total Filas", numero_total_filas]])
   time.sleep(time_sleep)
@@ -702,7 +702,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
           pestana.update((columna + str(index)), [[filtrado, (porcentaje), sentimiento]], value_input_option='USER_ENTERED')
           columna_pestana_ascii += 3
         index += 1
-        time.sleep(5)
+        time.sleep(2)
   
   #except:
     #print("No existe dicha categoria")
