@@ -647,6 +647,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
         segunda_columna_pestana_ascii = 65
         dos_columnas = 0
         pestana.update(("A" + str(index)), [[word]])
+        print(stakeholders_filtrados)
         for stakeholder in stakeholders_filtrados:
           if fecha_inicio != "-" and fecha_fin != "-": #Filtro fechas
             filtrado = (df.loc[(df["Date"] >= fecha_inicio) & (df["Date"] <= fecha_fin)])
