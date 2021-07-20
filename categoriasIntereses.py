@@ -637,11 +637,11 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
 
   index = 8
   for column in column_dictonary:
+    time.sleep(2)
     progreso += 1
     barra_progreso.update(progreso)
     for word in column:
       if type(word) != float:
-        time.sleep(2)
         if word in columns[0]:
           index += 1
         columna_pestana_ascii = 66
@@ -705,7 +705,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
               sentimiento = 1
           else:
             sentimiento = "-"
-          pestana.update((columna + str(index)), [[int(filtrado), porcentaje, float(sentimiento)]], value_input_option='USER_ENTERED')
+          pestana.update((columna + str(index)), [[int(filtrado), porcentaje, sentimiento]], value_input_option='USER_ENTERED')
           columna_pestana_ascii += 3
         index += 1
   del df
