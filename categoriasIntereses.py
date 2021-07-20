@@ -706,7 +706,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
           pestana.update((columna + str(index)), [[filtrado, (porcentaje), sentimiento]], value_input_option='USER_ENTERED')
           columna_pestana_ascii += 3
         index += 1
-        time.sleep(2)
+    time.sleep(2)
   del df
 
 #Similar a la aplicacion de filtros demograficos, con la diferencia de que se puede excluir a una categoria de stakeholders en particular
