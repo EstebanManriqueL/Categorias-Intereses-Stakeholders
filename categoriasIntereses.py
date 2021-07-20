@@ -552,6 +552,7 @@ def aplicacion_Filtro_Stakeholders_Condensado(archivo_interacciones, nombre_pest
     index += 1
   del df
 
+#Filtro para cada uno de los participantes de una categoria de stakeholders, por cada una de las palabras/tokens de las categorias de Intereses
 def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pestana, country, profession, categoria, columna_analisis, fecha_inicio, fecha_fin):
   sentiment = sentiment_analysis.SentimentAnalysisSpanish()
   df = pd.read_csv(archivo_interacciones, names=columns_data, encoding='latin1', usecols=columns_data)
@@ -648,7 +649,6 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
         segunda_columna_pestana_ascii = 65
         dos_columnas = 0
         pestana.update(("A" + str(index)), [[word]])
-        print(stakeholders_filtrados)
         for stakeholder in stakeholders_filtrados:
           if profession == "ALL": #Filtro profesiones
             if country == "ALL": #Filtro Pais
