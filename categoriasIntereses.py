@@ -583,12 +583,12 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
       if country == "ALL": #En caso de que no se requiera un pais en particular
         country_gender = df
       else: #En caso de requerir un pais en particular
-          country_gender = df.loc[df[country_name] == country]
+        country_gender = df.loc[df[country_name] == country]
       interacciones_stakeholder = (country_gender.loc[country_gender[stakeholder_name].str.contains(str(stakeholder), regex=False, na=False, case=False)])
     else:
       #Para profesion en particular
       if country == "ALL":
-          country_gender = df
+        country_gender = df
       else:
         country_gender = df.loc[df[country_name] == country]
       profession_gender = country_gender.loc[country_gender[profession_name].str.contains(profession, regex=False, na=False, case=False)]
@@ -649,6 +649,7 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
         pestana.update(("A" + str(index)), [[word]])
         print(stakeholders_filtrados)
         for stakeholder in stakeholders_filtrados:
+          print(stakeholder)
           if fecha_inicio != "-" and fecha_fin != "-": #Filtro fechas
             filtrado = (df.loc[(df["Date"] >= fecha_inicio) & (df["Date"] <= fecha_fin)])
           else:
