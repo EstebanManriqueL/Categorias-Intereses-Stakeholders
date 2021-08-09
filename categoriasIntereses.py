@@ -239,7 +239,7 @@ def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, pro
               sentimiento += sentiment.sentiment(str_twwt)
               response = natural_language_understanding.analyze(
                 text = str_twwt,
-                language = "es",
+                language = "Spanish",
                 features=Features(sentiment=SentimentOptions(document=True))).get_result()
               sentimiento_IBM += float(response["sentiment"]["document"]["score"])  
           if conteos[index_sentiments] > 0:
@@ -249,7 +249,7 @@ def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, pro
               sentimiento = 1
           else:
              sentimiento = "-"
-             sentimiento_IBM = "-" 
+             sentimiento_IBM = "-"
           acumulado_sentimiento.append(sentimiento)
           acumulado_sentimiento_IBM.append(sentimiento_IBM)
           index_sentiments +=1
