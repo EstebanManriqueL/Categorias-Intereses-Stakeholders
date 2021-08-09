@@ -12,6 +12,10 @@ import gc
 gc.enable()
 from sentiment_analysis_spanish import sentiment_analysis
 import os
+import json
+from ibm_watson import NaturalLanguageUnderstandingV1
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+from ibm_watson.natural_language_understanding_v1 import Features, SentimentOption
 
 #Autentificacion de usuario y selección de archivo/sheet
 def seleccion_Archivo(id_archivo):
@@ -119,6 +123,16 @@ def lectura_Stakeholders(path_archivo):
         stakeholder_counter+= 1
       counter+= 1
 
+#Definicion de parametros y configuracion para uso de Watson Sentiment
+def configuracionWatson():
+  authenticator = IAMAuthenticator('0Xenkpw7rEhbHWIOU-PGQZ0U8EpWbuGocVztjobjyjlG')
+  global natural_language_understanding
+  natural_language_understanding = NaturalLanguageUnderstandingV1(
+    version='2021-08-01',
+    authenticator=authenticator
+  )
+  natural_language_understanding.set_service_url('https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/4fecbee7-cf18-45f6-a388-d156027c9df7')
+
 #Filtro por token/hashtag y por género, con sentimiento
 def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, profession, fecha_inicio, fecha_fin):
   sentiment = sentiment_analysis.SentimentAnalysisSpanish()
@@ -170,7 +184,7 @@ def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, pro
 
   pestana.update("A3", [["Hombres", int(men_rows["Full Text"])], ["Mujeres", int(women_rows["Full Text"])], ["No especificado", int(unknown_rows["Full Text"])], ["Total Filas", int(total_rows["Full Text"])]])
   time.sleep(time_sleep)
-  pestana.update("B7", [["Hombres", "Mujeres", "No especificado", "% Hombres", "% Mujeres", "% No especificado", "Sentimiento Hombres", "Sentimiento Mujeres", "Sentimiento No especificados", "Total", "%Total"]])
+  pestana.update("B7", [["Hombres", "Mujeres", "No especificado", "% Hombres", "% Mujeres", "% No especificado", "Sentimiento Hombres", "Sentimiento Mujeres", "Sentimiento No especificados", "Total", "%Total", "Sentimiento hombres IBM", "Sentimiento mujeres IBM", "Sentimiento no definidos IBM"]])
   time.sleep(time_sleep)
   pestana.update("D1", [["Fecha Inicio", fecha_inicio], ["Fecha Fin", fecha_fin]])
 
@@ -214,24 +228,33 @@ def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, pro
         #Calculo de sentimiento por palabra/token para hombres, mujeres y desconocidos
         conteos = [unknown_counts, men_counts, female_counts]
         acumulado_sentimiento = []
+        acumulado_sentimiento_IBM = []
         index_sentiments = 0
         for gender in filter_ALL_genders:
           sentimiento = 0
+          sentimiento_IBM = 0
           for tweet in gender["Full Text"]:
             str_twwt = str(tweet).lower()
             if word.lower() in str_twwt:
               sentimiento += sentiment.sentiment(str_twwt)
+              response = natural_language_understanding.analyze(
+                text = str_twwt,
+                language = "Spanish",
+                features=Features(sentiment=SentimentOptions(document=True))).get_result()
+              sentimiento_IBM += float(response["sentiment"]["document"]["score"])  
           if conteos[index_sentiments] > 0:
             sentimiento = sentimiento / conteos[index_sentiments]
+            sentimiento_IBM = sentimiento_IBM / conteos[index_sentiments]
             if sentimiento > 1:
               sentimiento = 1
           else:
              sentimiento = "-"
           acumulado_sentimiento.append(sentimiento)
+          acumulado_sentimiento_IBM.append(sentimiento_IBM)
           index_sentiments +=1
         
         if word in columns[0]:
-          pestana.update(origin_cell, [[" ", " ", " ", " ", " ", " ", " ", " "]])
+          pestana.update(origin_cell, [[" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "]])
           cell_number += 1
           origin_cell = "A" + str(cell_number)
           origin_cell_men = "B" + str(cell_number)
@@ -243,17 +266,17 @@ def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, pro
           gsf.format_cell_range(pestana, "L:M", cell_decimal_format)
           time.sleep(time_sleep)
 
-          pestana.update(origin_cell, [[word, int(men_counts), int(female_counts), int(unknown_counts), ('=%s/$B$3' % origin_cell_men), ('=%s/$B$4' % origin_cell_women), ('=%s/$B$5' % origin_cell_unknown), (acumulado_sentimiento[1]), (acumulado_sentimiento[2]), (acumulado_sentimiento[0]), int(men_counts+female_counts+unknown_counts), ('=%s/$B$6' % origin_cell_total)]], value_input_option='USER_ENTERED')
+          pestana.update(origin_cell, [[word, int(men_counts), int(female_counts), int(unknown_counts), ('=%s/$B$3' % origin_cell_men), ('=%s/$B$4' % origin_cell_women), ('=%s/$B$5' % origin_cell_unknown), (acumulado_sentimiento[1]), (acumulado_sentimiento[2]), (acumulado_sentimiento[0]), int(men_counts+female_counts+unknown_counts), ('=%s/$B$6' % origin_cell_total), (acumulado_sentimiento_IBM[1]), (acumulado_sentimiento_IBM[2]), (acumulado_sentimiento_IBM[0])]], value_input_option='USER_ENTERED')
           time.sleep(time_sleep)  
         else:
           if bandera == 0:
-            pestana.update(origin_cell, [[word, int(men_counts), int(female_counts), int(unknown_counts), ('=%s/$B$3' % ("B" + str(cell_number))), ('=%s/$B$4' % ("C" + str(cell_number))), ('=%s/$B$5' % ("D" + str(cell_number))), (acumulado_sentimiento[1]), (acumulado_sentimiento[2]), (acumulado_sentimiento[0]), int(men_counts+female_counts+unknown_counts), ('=%s/$B$6' % ("K" + str(cell_number)))]], value_input_option='USER_ENTERED')  
+            pestana.update(origin_cell, [[word, int(men_counts), int(female_counts), int(unknown_counts), ('=%s/$B$3' % ("B" + str(cell_number))), ('=%s/$B$4' % ("C" + str(cell_number))), ('=%s/$B$5' % ("D" + str(cell_number))), (acumulado_sentimiento[1]), (acumulado_sentimiento[2]), (acumulado_sentimiento[0]), int(men_counts+female_counts+unknown_counts), ('=%s/$B$6' % ("K" + str(cell_number))), (acumulado_sentimiento_IBM[1]), (acumulado_sentimiento_IBM[2]), (acumulado_sentimiento_IBM[0])]], value_input_option='USER_ENTERED')  
             bandera = 1
           else:
             gsf.format_cell_range(pestana, "E:G", cell_decimal_format)
             gsf.format_cell_range(pestana, "L:M", cell_decimal_format)
             time.sleep(time_sleep)
-            pestana.update(origin_cell, [[word, int(men_counts), int(female_counts), int(unknown_counts), ('=%s/$B$3' % origin_cell_men), ('=%s/$B$4' % origin_cell_women), ('=%s/$B$5' % origin_cell_unknown), (acumulado_sentimiento[1]), (acumulado_sentimiento[2]), (acumulado_sentimiento[0]), int(men_counts+female_counts+unknown_counts), ('=%s/$B$6' % origin_cell_total)]], value_input_option='USER_ENTERED')
+            pestana.update(origin_cell, [[word, int(men_counts), int(female_counts), int(unknown_counts), ('=%s/$B$3' % origin_cell_men), ('=%s/$B$4' % origin_cell_women), ('=%s/$B$5' % origin_cell_unknown), (acumulado_sentimiento[1]), (acumulado_sentimiento[2]), (acumulado_sentimiento[0]), int(men_counts+female_counts+unknown_counts), ('=%s/$B$6' % origin_cell_total), (acumulado_sentimiento_IBM[1]), (acumulado_sentimiento_IBM[2]), (acumulado_sentimiento_IBM[0])]], value_input_option='USER_ENTERED')
             time.sleep(time_sleep)
     
         cell_number += 1
