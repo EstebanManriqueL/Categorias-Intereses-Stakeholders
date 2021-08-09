@@ -249,7 +249,6 @@ def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, pro
               sentimiento = 1
           else:
              sentimiento = "-"
-             sentimiento_IBM = "-"
           acumulado_sentimiento.append(sentimiento)
           acumulado_sentimiento_IBM.append(sentimiento_IBM)
           index_sentiments +=1
