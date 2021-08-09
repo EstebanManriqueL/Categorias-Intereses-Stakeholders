@@ -241,7 +241,8 @@ def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, pro
                 text = str_twwt,
                 language = "es",
                 features=Features(sentiment=SentimentOptions(document=True))).get_result()
-              sentimiento_IBM += float(response["sentiment"]["document"]["score"])  
+              sentimiento_IBM += float(response["sentiment"]["document"]["score"]) 
+              print("Hello") 
           if conteos[index_sentiments] > 0:
             sentimiento = sentimiento / conteos[index_sentiments]
             sentimiento_IBM = sentimiento_IBM / conteos[index_sentiments]
