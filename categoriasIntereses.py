@@ -239,7 +239,7 @@ def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, pro
               sentimiento += sentiment.sentiment(str_twwt)
               response = natural_language_understanding.analyze(
                 text = str_twwt,
-                language = "Spanish",
+                language = "es",
                 features=Features(sentiment=SentimentOptions(document=True))).get_result()
               sentimiento_IBM += float(response["sentiment"]["document"]["score"])  
           if conteos[index_sentiments] > 0:
@@ -249,6 +249,7 @@ def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, pro
               sentimiento = 1
           else:
              sentimiento = "-"
+             sentimiento_IBM = "-"
           acumulado_sentimiento.append(sentimiento)
           acumulado_sentimiento_IBM.append(sentimiento_IBM)
           index_sentiments +=1
@@ -274,7 +275,7 @@ def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, pro
             bandera = 1
           else:
             gsf.format_cell_range(pestana, "E:G", cell_decimal_format)
-            gsf.format_cell_range(pestana, "L:M", cell_decimal_format)
+            gsf.format_cell_range(pestana, "L:L", cell_decimal_format)
             time.sleep(time_sleep)
             pestana.update(origin_cell, [[word, int(men_counts), int(female_counts), int(unknown_counts), ('=%s/$B$3' % origin_cell_men), ('=%s/$B$4' % origin_cell_women), ('=%s/$B$5' % origin_cell_unknown), (acumulado_sentimiento[1]), (acumulado_sentimiento[2]), (acumulado_sentimiento[0]), int(men_counts+female_counts+unknown_counts), ('=%s/$B$6' % origin_cell_total), (acumulado_sentimiento_IBM[1]), (acumulado_sentimiento_IBM[2]), (acumulado_sentimiento_IBM[0])]], value_input_option='USER_ENTERED')
             time.sleep(time_sleep)
