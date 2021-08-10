@@ -247,15 +247,16 @@ def aplicacion_filtros_demograficos(nombre_archivo, nombre_pestana, country, pro
           if conteos[index_sentiments] > 0:
             sentimiento = sentimiento / conteos[index_sentiments]
             sentimiento_IBM = sentimiento_IBM / conteos[index_sentiments]
-            print(sentimiento)
-            print(sentimiento_IBM)
-            print(conteos[index_sentiments])
-            print(sentiment.sentiment(str_completo))
+            print("Palabra: " + str(word))
+            print("Sentimiento original: " + str(sentimiento))
+            print("Sentimiento IBM: " + str(sentimiento_IBM))
+            print("Numero de tweets: " + str(conteos[index_sentiments]))
+            print("Sentimiento original completo: " + str(sentiment.sentiment(str_completo)))
             response = natural_language_understanding.analyze(
                   text = str_completo,
                   language = "es",
                   features=Features(sentiment=SentimentOptions(document=True))).get_result()
-            print(float(response["sentiment"]["document"]["score"]))
+            print("Sentimiento IBM completo: " + str(float(response["sentiment"]["document"]["score"])))
             if sentimiento > 1:
               sentimiento = 1
           else:
