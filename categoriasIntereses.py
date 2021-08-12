@@ -13,9 +13,9 @@ gc.enable()
 from sentiment_analysis_spanish import sentiment_analysis
 import os
 import json
-from ibm_watson import NaturalLanguageUnderstandingV1
-from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-from ibm_watson.natural_language_understanding_v1 import Features, SentimentOptions
+#from ibm_watson import NaturalLanguageUnderstandingV1
+#from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+#from ibm_watson.natural_language_understanding_v1 import Features, SentimentOptions
 
 #Autentificacion de usuario y selección de archivo/sheet
 def seleccion_Archivo(id_archivo):
