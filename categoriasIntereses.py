@@ -729,7 +729,6 @@ def aplicacion_Filtro_Stakeholders_Expandido(archivo_interacciones, nombre_pesta
 
 #Similar a la aplicacion de filtros demograficos, con la diferencia de que se puede excluir a una categoria de stakeholders en particular
 def aplicacion_Filtro_Excluir_Stakeholders(archivo_interacciones, nombre_pestana, country, profession, categoria, columna_analisis, fecha_inicio, fecha_fin):
-  gc.enable()
   sentiment = sentiment_analysis.SentimentAnalysisSpanish()
   df = pd.read_csv(archivo_interacciones, names=columns_data, encoding='latin1', usecols=columns_data)
   stakeholder_name = columna_analisis
@@ -825,9 +824,9 @@ def aplicacion_Filtro_Excluir_Stakeholders(archivo_interacciones, nombre_pestana
       #gc.collect()
       time.sleep(time_sleep)
       if type(word) != float:
-        men_counts = contador_incluidos.loc[df[gender_name] == male]["Full Text"].str.contains(word, case=False).value_counts()
-        female_counts = contador_incluidos.loc[df[gender_name] == female]["Full Text"].str.contains(word, case=False).value_counts()
-        unknown_counts = contador_incluidos.loc[df[gender_name] == gender]["Full Text"].str.contains(word, case=False).value_counts()
+        men_counts = contador_incluidos.loc[df[gender_name] == male]["Full Text"].str.contains(word, case=False, regex=False, na=False).value_counts()
+        female_counts = contador_incluidos.loc[df[gender_name] == female]["Full Text"].str.contains(word, case=False, regex=False, na=False).value_counts()
+        unknown_counts = contador_incluidos.loc[df[gender_name] == gender]["Full Text"].str.contains(word, case=False, regex=False, na=False).value_counts()
         try:
           men_counts = men_counts.iloc[1]
         except:
@@ -843,7 +842,7 @@ def aplicacion_Filtro_Excluir_Stakeholders(archivo_interacciones, nombre_pestana
         
         sentimiento_hombres = 0
         hombres = contador_incluidos.loc[df[gender_name] == male]
-        hombres = hombres[hombres["Full Text"].str.contains(word, case=False)]
+        hombres = hombres[hombres["Full Text"].str.contains(word, case=False, regex=False, na=False)]
         for tweet in hombres["Full Text"]:
           if (sentiment.sentiment(str(tweet)) <= 1):
             sentimiento_hombres += sentiment.sentiment(str(tweet))
@@ -855,7 +854,7 @@ def aplicacion_Filtro_Excluir_Stakeholders(archivo_interacciones, nombre_pestana
           sentimiento_hombres = "-"
         
         mujeres = contador_incluidos.loc[df[gender_name] == female]
-        mujeres = mujeres[mujeres["Full Text"].str.contains(word, case=False)]
+        mujeres = mujeres[mujeres["Full Text"].str.contains(word, case=False, regex=False, na=False)]
         sentimiento_mujeres = 0
         for tweet in mujeres["Full Text"]:
           if (sentiment.sentiment(str(tweet)) <= 1):
@@ -868,7 +867,7 @@ def aplicacion_Filtro_Excluir_Stakeholders(archivo_interacciones, nombre_pestana
           sentimiento_mujeres = "-"
         
         desconocidos = contador_incluidos.loc[df[gender_name] == gender]
-        desconocidos = desconocidos[desconocidos["Full Text"].str.contains(word, case=False)]
+        desconocidos = desconocidos[desconocidos["Full Text"].str.contains(word, case=False, regex=False, na=False)]
         sentimiento_desconocido = 0
         for tweet in desconocidos["Full Text"]:
           if (sentiment.sentiment(str(tweet)) <= 1):
