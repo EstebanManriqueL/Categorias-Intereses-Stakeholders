@@ -114,25 +114,30 @@ def inclusionSentimientoCSV(path_archivo):
             sNPS.append("sNPS")
         else:
             texto = str(tweet)
-            response = natural_language_understanding.analyze(
-                text = texto,
-                language = "Spanish",
-                features=Features(sentiment=SentimentOptions(document=True))).get_result()
-            watsonScore.append(float(response["sentiment"]["document"]["score"]))
-            
-            if float(response["sentiment"]["document"]["score"]) > 0:
-                watsonSentiment.append("Positive")
-            elif float(response["sentiment"]["document"]["score"]) < 0:
-                watsonSentiment.append("Negative")
-            else:
-                watsonSentiment.append("Neutral")
+            if len(texto) >= 15:
+                response = natural_language_understanding.analyze(
+                    text = texto,
+                    language = "Spanish",
+                    features=Features(sentiment=SentimentOptions(document=True))).get_result()
+                watsonScore.append(float(response["sentiment"]["document"]["score"]))
+                
+                if float(response["sentiment"]["document"]["score"]) > 0:
+                    watsonSentiment.append("Positive")
+                elif float(response["sentiment"]["document"]["score"]) < 0:
+                    watsonSentiment.append("Negative")
+                else:
+                    watsonSentiment.append("Neutral")
 
-            if float(response["sentiment"]["document"]["score"]) > 0.4:
-                sNPS.append(10)
-            elif float(response["sentiment"]["document"]["score"]) < 0:
-                sNPS.append(0)
+                if float(response["sentiment"]["document"]["score"]) > 0.4:
+                    sNPS.append(10)
+                elif float(response["sentiment"]["document"]["score"]) < 0:
+                    sNPS.append(0)
+                else:
+                    sNPS.append(7)
             else:
-                sNPS.append(7)
+                watsonScore.append("N/A")
+                watsonSentiment.append("N/A")
+                sNPS.append("N/A")
     
     df["Watson Score"] = watsonScore
     df["Watson Sentiment"] = watsonSentiment
