@@ -106,7 +106,7 @@ def inclusionSentimientoCSV(path_archivo):
     watsonScore = []
     watsonSentiment = []
     sNPS = []
-    tweets = df["Full text"]
+    tweets = df["Full Text"]
     for tweet in tweets:
         if tweet == tweets[0]:
             watsonScore.append("Watson Score")
