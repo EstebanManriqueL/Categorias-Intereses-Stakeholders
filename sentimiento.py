@@ -142,7 +142,7 @@ def inclusionSentimientoCSV(path_archivo):
         df.to_csv(f, index=False, header=False)
 
 #Calculo de social NPS           
-def calculoSNPS(nombre_archivo, nombre_pestana, categoria, country, profession, fecha_inicio, fecha_fin, mencionados):
+"""def calculoSNPS(nombre_archivo, nombre_pestana, categoria, country, profession, fecha_inicio, fecha_fin, mencionados):
     df = pd.read_csv(nombre_archivo, names=columns_data, encoding='latin1', usecols=columns_data)
     country_name = "Country Code" #Columna de codigos de paises para filtro
     profession_name = "Professions" #Columna de profesiones para filtro
@@ -184,5 +184,5 @@ def calculoSNPS(nombre_archivo, nombre_pestana, categoria, country, profession, 
     time_sleep = 0.25
 
     pestana.update("A1", [["Calculo sNPS"], ["Pais", country], ["Categoria analizada", categoria], ["Total Filas analizadas"], ["Fecha inicio", fecha_inicio], ["Fecha Fin", fecha_fin]])
-    time.sleep(time_sleep)
+    time.sleep(time_sleep)"""
 
