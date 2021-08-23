@@ -102,7 +102,7 @@ def configuracionWatson():
 
 #Escribe en el documento con las inetracciones de Brandwatch, sNPS y sentimiento de acuerdo a Watson
 def inclusionSentimientoCSV(path_archivo):
-    df = pd.read_csv(path_archivo, names=columns_data, encoding='latin1', usecols=columns_data)
+    df = pd.read_csv(path_archivo, names=columns_data, encoding='latin1', usecols=columns_data, engine="python")
     watsonScore = []
     watsonSentiment = []
     sNPS = []
@@ -152,7 +152,7 @@ def inclusionSentimientoCSV(path_archivo):
         df.to_csv(f, index=False, header=False)
 
 #Calculo de social NPS           
-"""def calculoSNPS(nombre_archivo, nombre_pestana, categoria, country, profession, fecha_inicio, fecha_fin, mencionados):
+def calculoSNPS(nombre_archivo, nombre_pestana, categoria, country, profession, fecha_inicio, fecha_fin, mencionados):
     df = pd.read_csv(nombre_archivo, names=columns_data, encoding='latin1', usecols=columns_data)
     country_name = "Country Code" #Columna de codigos de paises para filtro
     profession_name = "Professions" #Columna de profesiones para filtro
@@ -161,12 +161,11 @@ def inclusionSentimientoCSV(path_archivo):
 
     actores = []
     
-
     indiceCategoria = stakeholders[0].index(categoria)
     for stakeholder in stakeholders_dictonary[indiceCategoria]:
         if type(stakeholder) != float and stakeholder != stakeholders_dictonary[indiceCategoria][0]:
             if mencionados == "YES" and stakeholder[0] == "@":
-                actores.append(stakeholder)
+                actores.append(stakeholder.lower())
             elif mencionados == "NO" and stakeholder[0] != "@":
                 actores.append(stakeholder)
             else:
@@ -181,18 +180,31 @@ def inclusionSentimientoCSV(path_archivo):
         else:
             df = df.loc[df[country_name] == country]
         if mencionados == "YES":
-        elif
+            df = df[df[mentioned_name].str.contains('|'.join(actores), na=False, case=False, regex=False)]
+        elif mencionados == "NO":
+            df = df[df["Full Text"].str.contains('|'.join(actores), na=False, case=False, regex=False)]
+        else:
+            pass
     else:
         if country == "ALL":
             pass
         else:
             df = df.loc[df[country_name] == country]
         df = df.loc[df[profession_name].str.contains(profession, regex=False, na=False, case=False)]
+        if mencionados == "YES":
+            df = df[df[mentioned_name].str.contains('|'.join(actores), na=False, case=False, regex=False)]
+        elif mencionados == "NO":
+             df = df[df["Full Text"].str.contains('|'.join(actores), na=False, case=False, regex=False)]
+        else:
+            pass
+
+    filasAnalizadas = int(df["Full Text"].count())
+    print(int(df["Full Text"].count()))
 
     añadir_Pestaña(nombre_pestana)
     pestana = documento.worksheet(nombre_pestana)
     time_sleep = 0.25
 
-    pestana.update("A1", [["Calculo sNPS"], ["Pais", country], ["Categoria analizada", categoria], ["Total Filas analizadas"], ["Fecha inicio", fecha_inicio], ["Fecha Fin", fecha_fin]])
-    time.sleep(time_sleep)"""
+    pestana.update("A1", [["Calculo sNPS"], ["Pais", country], ["Categoria analizada", categoria], ["Total Filas analizadas", filasAnalizadas], ["Fecha inicio", fecha_inicio], ["Fecha Fin", fecha_fin]])
+    time.sleep(time_sleep)
 
