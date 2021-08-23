@@ -102,7 +102,7 @@ def configuracionWatson():
 
 #Escribe en el documento con las inetracciones de Brandwatch, sNPS y sentimiento de acuerdo a Watson
 def inclusionSentimientoCSV(path_archivo):
-    df = pd.read_csv(path_archivo, names=columns_data, encoding='latin1', usecols=columns_data, engine="python")
+    df = pd.read_csv(path_archivo, names=columns_data, encoding='latin1', usecols=columns_data, engine="python", error_bad_lines=False)
     watsonScore = []
     watsonSentiment = []
     sNPS = []
